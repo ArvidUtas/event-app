@@ -1,4 +1,5 @@
 import { showLogin } from './views/login';
+import { registerUser } from './views/register-user';
 import { showDashboard } from './views/dashboard';
 
 export function router() {
@@ -9,6 +10,9 @@ export function router() {
   switch (path) {
     case '/login':
       app.innerHTML = showLogin();
+      break;
+    case '/register-user':
+      app.innerHTML = registerUser();
       break;
     case '/dashboard':
       app.innerHTML = showDashboard();

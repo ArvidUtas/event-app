@@ -1,7 +1,12 @@
 package eventapp.backend.repositories;
 
-import eventapp.backend.entities.User;
+import eventapp.backend.entities.AppUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserRepository extends MongoRepository<User, String> {
+import java.util.Optional;
+
+public interface UserRepository extends MongoRepository<AppUser, String> {
+    Optional<Object> findByUsername(String username);
+
+    Optional<Object> findByEmail(String email);
 }
