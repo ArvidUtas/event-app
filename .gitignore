@@ -6,6 +6,7 @@ frontend/dist/
 backend/target/
 backend/.idea/
 *.iml
+backend/.env.properties
 
 # OS
 .DS_Store
