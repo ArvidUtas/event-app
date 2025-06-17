@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import eventapp.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,5 +52,12 @@ public class UserService {
     }
     public boolean emailIsRegistered(String email) {
         return repo.findByEmail(email).isPresent();
+    }
+
+    public ResponseEntity<String> login(String username, String password){
+        return repo.findByUsername(username)
+                .filter(user -> new BCryptPasswordEncoder().matches(password,user.getPassword()))
+                .map(found -> ResponseEntity.ok().body("Login successful"))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password"));
     }
 }

@@ -1,4 +1,4 @@
-import { showLogin } from './views/login';
+import { showLogin, setupLoginFormListener } from './views/login';
 import { registerUser, setupRegisterFormListener } from './views/register-user';
 import { showDashboard } from './views/dashboard';
 
@@ -10,6 +10,7 @@ export function router() {
   switch (path) {
     case '/login':
       app.innerHTML = showLogin();
+      setupLoginFormListener();
       break;
     case '/register-user':
       app.innerHTML = registerUser();

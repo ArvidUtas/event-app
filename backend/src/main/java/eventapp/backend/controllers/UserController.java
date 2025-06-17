@@ -16,8 +16,11 @@ public class UserController {
     //todo change to DTO?
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AppUser user){
-        System.out.println(user);
         return userService.registerUser(user.getUsername(), user.getEmail(), user.getPassword());
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AppUser user){
+        return userService.login(user.getUsername(), user.getPassword());
+    }
 }

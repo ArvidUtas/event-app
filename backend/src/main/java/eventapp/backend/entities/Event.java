@@ -1,7 +1,6 @@
 package eventapp.backend.entities;
 
 import eventapp.backend.enums.Visibility;
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Document("Event")
-@Data
 public class Event {
     @Id
     private String id;
