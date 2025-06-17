@@ -7,6 +7,7 @@ export function registerUser(): string {
       <input type="password" name="password" placeholder="Password" class="form-control"/><br>
       <button type="submit" class="btn border">Register</button>
     </form>
+    <div class="text-danger mt-2" id="registerMessage"></div>
   `;
 }
 
@@ -17,12 +18,6 @@ export function setupRegisterFormListener(){
         return;        
     }
     form.addEventListener("submit", postRegister)
-}
-
-interface User {
-  username: string
-  email: string
-  password: string
 }
 
 function postRegister(e: Event) {
@@ -49,9 +44,16 @@ function postRegister(e: Event) {
   });
 
   fetch(request)
-    .then((response) => response.text())
-    .then((data) => {
-      console.log(data);
-    })
+    .then((response) => {
+        if (response.ok){
+            window.location.href = "./login";
+        } else {
+            response.text().then((message) => {
+                const regMessage = document.getElementById("registerMessage");
+                if (regMessage) regMessage.innerText = message;
+            })
+        }
+        })
+    
     .catch((error) => console.error("Error:", error));
 }

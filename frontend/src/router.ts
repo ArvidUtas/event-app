@@ -1,6 +1,10 @@
 import { showLogin, setupLoginFormListener } from './views/login';
 import { registerUser, setupRegisterFormListener } from './views/register-user';
-import { showDashboard } from './views/dashboard';
+import { showDashboard, setupDashboardListeners } from './views/dashboard';
+
+function isAuthenticated(): boolean {
+  return !!sessionStorage.getItem("token");
+}
 
 export function router() {
   const path = window.location.pathname;
@@ -17,7 +21,13 @@ export function router() {
       setupRegisterFormListener();
       break;
     case '/dashboard':
+      if(!isAuthenticated()){
+        app.innerHTML = showLogin();
+        setupLoginFormListener();
+        return;
+      }
       app.innerHTML = showDashboard();
+      setupDashboardListeners();
       break;
     default:
       app.innerHTML = `<h1>404 - Page Not Found</h1>`;

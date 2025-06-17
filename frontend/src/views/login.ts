@@ -12,6 +12,7 @@ export function showLogin(): string {
     <button type="submit" class="btn border">Login</button>
     </div>
     </form>
+    <div class="text-danger mt-2" id="loginMessage"></div>
   `;
 }
 
@@ -27,28 +28,37 @@ export function setupLoginFormListener(){
 function postLogin(e:Event){
   e.preventDefault();
   const form = document.getElementById("loginForm") as HTMLFormElement;
-  if (!form){
+  if (!form) {
     console.error("Form not found");
     return;
   }
   const formData = new FormData(form);
-  const user = {username: formData.get("username") as string, email: "non@non.se", password: formData.get("password") as string};
+  const user = {
+    username: formData.get("username") as string,
+    password: formData.get("password") as string,
+  };
 
-  console.log("user" + user);
-  
   const headers = new Headers();
   headers.set("Content-Type", "application/json");
   headers.set("Accept", "application/json");
 
-  const request: RequestInfo = new Request("http://localhost:8080/login",{
-    method:"POST", 
+  const request: RequestInfo = new Request("http://localhost:8080/login", {
+    method: "POST",
     headers: headers,
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   });
 
   fetch(request)
-    .then((response) => response.text())
-    .then((data) => console.log(data))
+    .then((response) => {
+      if (response.ok) {
+        sessionStorage.setItem("token","isLoggedIn")
+        window.location.href = "/dashboard";
+      } else {
+        response.text().then((message) => {
+          const loginMessage = document.getElementById("loginMessage");
+          if (loginMessage) loginMessage.innerText = message;
+        });
+      }
+    })
     .catch((error) => console.error("Error: ", error));
-
 }

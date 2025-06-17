@@ -19,8 +19,8 @@ public class UserService {
 
         String errormessage = "";
 //Todo change to english
-        if (username.isEmpty() || password.isEmpty()){
-            errormessage = "Användarnamnet eller lösenordet är tomt.";
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty()){
+            errormessage = "Fyll i alla fält.";
         } else if (!isValidUsername(username)){
             errormessage = "Användarnamnet är för långt eller innehåller felaktiga karaktärer.";
         } else if (usernameIsTaken(username)){
