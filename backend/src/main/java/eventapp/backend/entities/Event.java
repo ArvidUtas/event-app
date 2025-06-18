@@ -17,17 +17,19 @@ public class Event {
     //private String image;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String venue;
     private List<String> address;
     //private String? coordinates;
     private Visibility visibility;
 
-    public Event(String title, String organisedBy, String description, LocalDateTime startTime,
-                 LocalDateTime endTime, List<String> address, Visibility visibility) {
+    public Event(String title, String organisedBy, String description, LocalDateTime startTime, LocalDateTime endTime,
+                 String venue, List<String> address, Visibility visibility) {
         this.title = title;
         this.organisedBy = organisedBy;
         this.description = description;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.venue = venue;
         this.address = address;
         this.visibility = visibility;
     }

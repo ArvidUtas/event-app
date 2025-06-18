@@ -7,7 +7,7 @@ public class Mapper {
 
     public Event eventDtoToEvent(EventDTO dto){
         return new Event(dto.getTitle(),dto.getOrganisedBy(), dto.getDescription(), dto.getStartTime(),dto.getEndTime(),
-                dto.getAddress(),dto.getVisibility());
+                dto.getVenue(), dto.getAddress(),dto.getVisibility());
     }
 
 }
