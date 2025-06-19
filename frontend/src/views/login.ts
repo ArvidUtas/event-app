@@ -51,7 +51,7 @@ function postLogin(e:Event){
   fetch(request)
     .then((response) => {
       if (response.ok) {
-        sessionStorage.setItem("token","isLoggedIn")
+        sessionStorage.setItem("token",user.username)
         window.location.href = "/dashboard";
       } else {
         response.text().then((message) => {

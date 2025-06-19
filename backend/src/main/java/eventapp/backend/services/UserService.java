@@ -15,6 +15,10 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
+    public AppUser findUserByUsername(String username){
+        return repo.findByUsername(username).orElseGet(null);
+    }
+
     public ResponseEntity<String> registerUser(String username, String email, String password){
 
         String errormessage = "";

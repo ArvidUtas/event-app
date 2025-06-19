@@ -17,6 +17,10 @@ public class AppUser {
         this.password = password;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }

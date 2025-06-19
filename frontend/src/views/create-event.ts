@@ -45,6 +45,7 @@ function postNewEvent(e:Event){
     
     const eventData: EventFormData = {
         title: formData.get("title") as string,
+        organisedBy: sessionStorage.getItem("token"),
         description: formData.get("description") as string,
         startTime: formData.get("start-time") as string,
         endTime: formData.get("end-time") as string,
@@ -80,15 +81,16 @@ function postNewEvent(e:Event){
 }
 
 interface EventFormData {
-  title: string;
-  description: string;
-  startTime: string; // ISO datetime string
-  endTime: string;
-  timeZone: string;
-  venue?: string;
-  address: {addressOne: string,
-    postalCode: string,
-    city: string,
-    addressTwo?: string}
-  visibility: "PUBLIC" | "INVITE_ONLY" | "URL_ONLY";
+    title: string;
+    organisedBy: string | null;
+    description: string;
+    startTime: string; // ISO datetime string
+    endTime: string;
+    timeZone: string;
+    venue?: string;
+    address: {addressOne: string,
+        postalCode: string,
+        city: string,
+        addressTwo?: string}
+    visibility: "PUBLIC" | "INVITE_ONLY" | "URL_ONLY";
 }

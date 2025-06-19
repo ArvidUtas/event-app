@@ -12,10 +12,13 @@ import org.springframework.stereotype.Service;
 public class EventService {
     @Autowired
     private EventRepository repo;
+    @Autowired
+    private UserService userService;
     private final Mapper mapper = new Mapper();
 
     public ResponseEntity<String> addEvent(EventDTO event){
         try {
+            event.setOrganisedBy(userService.findUserByUsername(event.getOrganisedBy()).getId());
             repo.save(mapper.eventDtoToEvent(event));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event. " + e.getMessage());

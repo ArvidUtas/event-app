@@ -10,7 +10,7 @@ import java.time.ZoneId;
 public class EventDTO {
     private String id;
     private final String title;
-    private final String organisedBy; //FK
+    private String organisedBy; //FK
     private final String description;
     //private String image;
     private final Instant startTime;
@@ -74,6 +74,9 @@ public class EventDTO {
         return visibility;
     }
 
+    public void setOrganisedBy(String organisedBy) {
+        this.organisedBy = organisedBy;
+    }
 
     @Override
     public String toString() {
