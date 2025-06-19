@@ -1,30 +1,34 @@
 package eventapp.backend.dtos;
 
+import eventapp.backend.entities.Address;
 import eventapp.backend.enums.Visibility;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.ZoneId;
 
 public class EventDTO {
     private String id;
-    private String title;
-    private String organisedBy; //FK
-    private String description;
+    private final String title;
+    private final String organisedBy; //FK
+    private final String description;
     //private String image;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String venue;
-    private List<String> address;
+    private final Instant startTime;
+    private final Instant endTime;
+    private final ZoneId timeZone;
+    private final String venue;
+    private final Address address;
     //private String? coordinates;
-    private Visibility visibility;
+    private final Visibility visibility;
 
     public EventDTO(String title, String organisedBy, String description, LocalDateTime startTime,
-                    LocalDateTime endTime, String venue, List<String> address, Visibility visibility) {
+                    LocalDateTime endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
         this.title = title;
         this.organisedBy = organisedBy;
         this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = startTime.atZone(timeZone).toInstant();
+        this.endTime = endTime.atZone(timeZone).toInstant();
+        this.timeZone = timeZone;
         this.venue = venue;
         this.address = address;
         this.visibility = visibility;
@@ -46,23 +50,44 @@ public class EventDTO {
         return description;
     }
 
-    public LocalDateTime getStartTime() {
+    public Instant getStartTime() {
         return startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Instant getEndTime() {
         return endTime;
+    }
+
+    public ZoneId getTimeZone() {
+        return timeZone;
     }
 
     public String getVenue() {
         return venue;
     }
 
-    public List<String> getAddress() {
+    public Address getAddress() {
         return address;
     }
 
     public Visibility getVisibility() {
         return visibility;
+    }
+
+
+    @Override
+    public String toString() {
+        return "EventDTO{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", organisedBy='" + organisedBy + '\'' +
+                ", description='" + description + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", timeZone=" + timeZone +
+                ", venue='" + venue + '\'' +
+                ", address=" + address +
+                ", visibility=" + visibility +
+                '}';
     }
 }

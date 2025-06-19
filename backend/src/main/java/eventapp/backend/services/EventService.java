@@ -18,7 +18,7 @@ public class EventService {
         try {
             repo.save(mapper.eventDtoToEvent(event));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event. " + e.getMessage());
         }
         return ResponseEntity.ok().body("Event added");
     }

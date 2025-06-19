@@ -15,6 +15,7 @@ public class EventController {
 
     @PostMapping("/addEvent")
     public ResponseEntity<String> addEvent(@RequestBody EventDTO event){
+        System.out.println(event);
         return service.addEvent(event);
     }
 }

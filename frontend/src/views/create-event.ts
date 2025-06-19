@@ -48,6 +48,7 @@ function postNewEvent(e:Event){
         description: formData.get("description") as string,
         startTime: formData.get("start-time") as string,
         endTime: formData.get("end-time") as string,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         venue: (formData.get("venue") as string) || undefined,
         address: {
             addressOne: formData.get("address-one") as string,
@@ -56,7 +57,8 @@ function postNewEvent(e:Event){
             city: formData.get("city") as string},
         visibility: formData.get("visibility") as "PUBLIC" | "INVITE_ONLY" | "URL_ONLY",
     };
-
+    console.log(eventData);
+    
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
     headers.set("Accept", "application/json");
@@ -66,16 +68,15 @@ function postNewEvent(e:Event){
     headers: headers,
     body: JSON.stringify(eventData),
   });
-
+  
   fetch(request)
   .then((response) => {
-    if (response.ok){
         response.text().then((message) => {
-                const eventMessage = document.getElementById("create-event-message");
-                if (eventMessage) eventMessage.innerText = message;
-        console.log("ok");        
+            const eventMessage = document.getElementById("create-event-message");
+            if (eventMessage) eventMessage.innerText = message;
     })
-  }})
+  })
+  .catch((error) => console.error("Error: ", error))
 }
 
 interface EventFormData {
@@ -83,6 +84,7 @@ interface EventFormData {
   description: string;
   startTime: string; // ISO datetime string
   endTime: string;
+  timeZone: string;
   venue?: string;
   address: {addressOne: string,
     postalCode: string,
