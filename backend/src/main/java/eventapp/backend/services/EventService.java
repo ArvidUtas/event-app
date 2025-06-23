@@ -6,12 +6,12 @@ import eventapp.backend.entities.Event;
 import eventapp.backend.mappers.Mapper;
 import eventapp.backend.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,10 +23,12 @@ public class EventService {
     @Autowired
     private UserService userService;
     private final Mapper mapper = new Mapper();
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public ResponseEntity<String> addEvent(EventDTO event){
         try {
-            event.setOrganisedBy(userService.findUserByUsername(event.getOrganisedBy()).getId());
+            event.setOrganisedBy(userService.findUserByUsername(event.getOrganisedBy()).getId()); //todo fix nullpointer
             repo.save(mapper.eventDtoToEvent(event));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event. " + e.getMessage());
@@ -46,14 +48,20 @@ public class EventService {
         }
         if (searchDTO.getKeyword() != null){
             query.addCriteria(Criteria.where("title").regex(".*" + Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
-            query.addCriteria(Criteria.where("description").regex(".*" + Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
         }
         if (searchDTO.getOrganisedBy() != null){
-            query.addCriteria(Criteria.where("organisedBy").is(searchDTO.getOrganisedBy()));
+            String userID = userService.findUserByUsername(searchDTO.getOrganisedBy()).getId(); //todo fix nullpointer
+            if (userService != null) query.addCriteria(Criteria.where("organisedBy").is(userID));
         }
-        if (searchDTO.getStartTime() != null){
+        if (searchDTO.getStartTime() != null && searchDTO.getEndTime() != null){
             query.addCriteria(Criteria.where("startTime").gte(searchDTO.getStartTime()).lte(searchDTO.getEndTime()));
         }
+
+        List<EventDTO> result = mongoTemplate.find(query, Event.class).stream()
+                .map(mapper::eventToEventDto)
+                .toList();
+
+        return ResponseEntity.ok().body(result);
 
     }
 }
