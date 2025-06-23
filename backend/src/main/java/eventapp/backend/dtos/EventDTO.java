@@ -21,13 +21,27 @@ public class EventDTO {
     //private String? coordinates;
     private final Visibility visibility;
 
-    public EventDTO(String title, String organisedBy, String description, LocalDateTime startTime,
-                    LocalDateTime endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
+    public EventDTO(String title, String organisedBy, String description, Instant startTime,
+                    Instant endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
         this.title = title;
         this.organisedBy = organisedBy;
         this.description = description;
         this.startTime = startTime.atZone(timeZone).toInstant();
         this.endTime = endTime.atZone(timeZone).toInstant();
+        this.timeZone = timeZone;
+        this.venue = venue;
+        this.address = address;
+        this.visibility = visibility;
+    }
+
+    public EventDTO(String id, String title, String organisedBy, String description, Instant startTime,
+                    Instant endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
+        this.id = id;
+        this.title = title;
+        this.organisedBy = organisedBy;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.timeZone = timeZone;
         this.venue = venue;
         this.address = address;

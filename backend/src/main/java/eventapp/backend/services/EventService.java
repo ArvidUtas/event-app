@@ -1,12 +1,20 @@
 package eventapp.backend.services;
 
 import eventapp.backend.dtos.EventDTO;
+import eventapp.backend.dtos.EventSearchDTO;
+import eventapp.backend.entities.Event;
 import eventapp.backend.mappers.Mapper;
 import eventapp.backend.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class EventService {
@@ -24,5 +32,28 @@ public class EventService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event. " + e.getMessage());
         }
         return ResponseEntity.ok().body("Event added");
+    }
+
+    public ResponseEntity<EventDTO> getEventByID(String eventID){
+        return ResponseEntity.ok().body(mapper.eventToEventDto(repo.getEventById(eventID)));
+    }
+
+    public ResponseEntity<List<EventDTO>> searchEvents(EventSearchDTO searchDTO){
+        Query query = new Query();
+
+        if (searchDTO.getVenue() != null){
+            query.addCriteria(Criteria.where("venue").is(searchDTO.getVenue()));
+        }
+        if (searchDTO.getKeyword() != null){
+            query.addCriteria(Criteria.where("title").regex(".*" + Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
+            query.addCriteria(Criteria.where("description").regex(".*" + Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
+        }
+        if (searchDTO.getOrganisedBy() != null){
+            query.addCriteria(Criteria.where("organisedBy").is(searchDTO.getOrganisedBy()));
+        }
+        if (searchDTO.getStartTime() != null){
+            query.addCriteria(Criteria.where("startTime").gte(searchDTO.getStartTime()).lte(searchDTO.getEndTime()));
+        }
+
     }
 }
