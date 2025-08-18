@@ -51,7 +51,7 @@ function getSearch(e: Event) {
     return;
   }
   const formData = new FormData(form);
-  const params: Record<string, string> = {};
+  const params: Record<string, string> = {timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone};
 
   formData.forEach((value, key) => {
     if (value) {

@@ -1,5 +1,6 @@
 package eventapp.backend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import eventapp.backend.entities.Address;
 import eventapp.backend.enums.Visibility;
 
@@ -21,8 +22,9 @@ public class EventDTO {
     //private String? coordinates;
     private final Visibility visibility;
 
-    public EventDTO(String title, String organisedBy, String description, Instant startTime,
-                    Instant endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
+    @JsonCreator
+    public EventDTO(String title, String organisedBy, String description, LocalDateTime startTime,
+                    LocalDateTime endTime, ZoneId timeZone, String venue, Address address, Visibility visibility) {
         this.title = title;
         this.organisedBy = organisedBy;
         this.description = description;

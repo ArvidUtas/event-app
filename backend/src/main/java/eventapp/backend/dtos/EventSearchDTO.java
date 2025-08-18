@@ -1,21 +1,25 @@
 package eventapp.backend.dtos;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class EventSearchDTO {
     private final String keyword;
     private final String organisedBy;
+    private final ZoneId timeZone;
     private final Instant startTime;
     private final Instant endTime;
     private final String venue;
     private final String city;
 
-    public EventSearchDTO(String keyword, String organisedBy, Instant startTime, Instant endTime,
-                          String venue, String city) {
+    public EventSearchDTO(String keyword, String organisedBy, LocalDateTime startTime,
+                          LocalDateTime endTime, ZoneId timeZone, String venue, String city) {
         this.keyword = keyword;
         this.organisedBy = organisedBy;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.timeZone = timeZone;
+        this.startTime = startTime.atZone(timeZone).toInstant();
+        this.endTime = endTime.atZone(timeZone).toInstant();
         this.venue = venue;
         this.city = city;
     }
