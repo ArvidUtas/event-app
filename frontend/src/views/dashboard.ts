@@ -22,68 +22,96 @@ export function showDashboard(): string {
   `;
 }
 
-export function setupDashboardListeners(){
+export function setupDashboardListeners() {
   const logOutBtn = document.getElementById("log-out") as HTMLButtonElement;
   logOutBtn?.addEventListener("click", logOut);
-  const createEventBtn = document.getElementById("create-event") as HTMLButtonElement;
-  createEventBtn?.addEventListener("click", () => {window.location.href = "/create-event"});
+  const createEventBtn = document.getElementById(
+    "create-event"
+  ) as HTMLButtonElement;
+  createEventBtn?.addEventListener("click", () => {
+    window.location.href = "/create-event";
+  });
   const form = document.getElementById("search-event-form") as HTMLFormElement;
-  if (!form) {
-        console.error("Form not found");
-        return;        
-    }
-  form.addEventListener("submit", getSearch);
+  form?.addEventListener("submit", getSearch);
 }
 
-function logOut(){
+function logOut() {
   sessionStorage.removeItem("token");
-  window.location.href="/login";
+  window.location.href = "/login";
 }
 
-function getSearch(e:Event){
+let searchCache: Map<string, EventData> = new Map();
+
+function getSearch(e: Event) {
   e.preventDefault();
   const resultsList = document.getElementById("results") as HTMLElement;
   const form = e.target as HTMLFormElement;
-  if (!form){
-      console.error("Form not found");
-      return;
+  if (!form) {
+    console.error("Form not found");
+    return;
   }
   const formData = new FormData(form);
   const params: Record<string, string> = {};
-  
+
   formData.forEach((value, key) => {
-    if (value){
+    if (value) {
       params[key] = String(value);
     }
   });
   console.log(params);
-  
+
   const queryString = new URLSearchParams(params).toString();
-  let listHTML: string = ``;
+  let listHTML: string = "";
 
   fetch(`http://localhost:8080/events/search?${queryString}`)
-    .then((res)=>res.json())
-    .then((data) => data.forEach((queryResult: EventData) => {
-      listHTML += `<a href="#" class="list-group-item list-group-item-action">${queryResult.title}</a>\n`;
-    }))
+    .then((res) => res.json())
+    .then((data: EventData[]) => {
+      searchCache.clear();
+      data.forEach((ev) => {
+        searchCache.set(ev.id, ev);
+        listHTML += `<button type="button" class="list-group-item list-group-item-action" data-id="${ev.id}">${ev.title}</button>`;
+      });
+    })
     .then(() => {
-      resultsList.innerHTML = listHTML;  
+      resultsList.innerHTML = listHTML;
+
+      resultsList.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = (btn as HTMLButtonElement).dataset.id!;
+          showEvent(id);
+        });
+      });
     });
+}
+
+async function showEvent(id: string) {
+  let ev: EventData; 
+
+  if (searchCache.has(id)){
+    ev = searchCache.get(id)!;
+  } else {
+    const res = await fetch(`http://localhost:8080/events/ID/${id}`);
+    ev = await res.json();
+  }
+
+  console.log(ev);
   
 }
 
 interface EventData {
-    title: string;
-    id: string;
-    organisedBy: string;
-    description: string;
-    startTime: string; // ISO datetime string
-    endTime: string;
-    timeZone: string;
-    venue?: string;
-    address: {addressOne: string,
-        postalCode: string,
-        city: string,
-        addressTwo?: string}
-    visibility: "PUBLIC" | "INVITE_ONLY" | "URL_ONLY";
+  title: string;
+  id: string;
+  organisedBy: string;
+  description: string;
+  startTime: string; // ISO datetime string
+  endTime: string;
+  timeZone: string;
+  venue?: string;
+  address: {
+    addressOne: string;
+    postalCode: string;
+    city: string;
+    addressTwo?: string;
+  };
+  visibility: "PUBLIC" | "INVITE_ONLY" | "URL_ONLY";
 }
