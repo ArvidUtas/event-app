@@ -44,14 +44,20 @@ public class EventService {
         Query query = new Query();
 
         if (searchDTO.getVenue() != null){
-            query.addCriteria(Criteria.where("venue").is(searchDTO.getVenue()));
+            query.addCriteria(Criteria.where("venue").regex("^" +
+                    Pattern.quote(searchDTO.getVenue()) + "$", "i"));
         }
         if (searchDTO.getKeyword() != null){
-            query.addCriteria(Criteria.where("title").regex(".*" + Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
+            query.addCriteria(Criteria.where("title").regex(".*" +
+                    Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
         }
         if (searchDTO.getOrganisedBy() != null){
             String userID = userService.findUserByUsername(searchDTO.getOrganisedBy()).getId(); //todo fix nullpointer
             if (userService != null) query.addCriteria(Criteria.where("organisedBy").is(userID));
+        }
+        if (searchDTO.getCity() != null){
+            query.addCriteria(Criteria.where("address.city").regex("^" +
+                    Pattern.quote(searchDTO.getCity()) + "$","i"));
         }
         if (searchDTO.getStartTime() != null && searchDTO.getEndTime() != null){
             query.addCriteria(Criteria.where("startTime").gte(searchDTO.getStartTime()).lte(searchDTO.getEndTime()));

@@ -8,7 +8,7 @@ public class EventSearchDTO {
     private final Instant startTime;
     private final Instant endTime;
     private final String venue;
-    private final String city; // not in use yet
+    private final String city;
 
     public EventSearchDTO(String keyword, String organisedBy, Instant startTime, Instant endTime,
                           String venue, String city) {

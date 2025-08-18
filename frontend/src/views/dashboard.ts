@@ -16,6 +16,9 @@ export function showDashboard(): string {
         <br>
         <button type="submit" class="btn btn-success border">Search</button>
     </form>
+    <div  id="results"  class="list-group mt-4">
+      
+    </div>
   `;
 }
 
@@ -29,7 +32,7 @@ export function setupDashboardListeners(){
         console.error("Form not found");
         return;        
     }
-  form.addEventListener("submit", postSearch);
+  form.addEventListener("submit", getSearch);
 }
 
 function logOut(){
@@ -37,8 +40,9 @@ function logOut(){
   window.location.href="/login";
 }
 
-function postSearch(e:Event){
+function getSearch(e:Event){
   e.preventDefault();
+  const resultsList = document.getElementById("results") as HTMLElement;
   const form = e.target as HTMLFormElement;
   if (!form){
       console.error("Form not found");
@@ -55,18 +59,31 @@ function postSearch(e:Event){
   console.log(params);
   
   const queryString = new URLSearchParams(params).toString();
-  
+  let listHTML: string = ``;
+
   fetch(`http://localhost:8080/events/search?${queryString}`)
     .then((res)=>res.json())
-    .then((data) => console.log(data));  
+    .then((data) => data.forEach((queryResult: EventData) => {
+      listHTML += `<a href="#" class="list-group-item list-group-item-action">${queryResult.title}</a>\n`;
+    }))
+    .then(() => {
+      resultsList.innerHTML = listHTML;  
+    });
+  
 }
 
-//possibly not needed:
-interface SearchFormData {
-  keyword?: string;
-  organisedBy?: string;
-  venue?: string;
-  city?: string;
-  startTime?: string;
-  endTime?: string;
+interface EventData {
+    title: string;
+    id: string;
+    organisedBy: string;
+    description: string;
+    startTime: string; // ISO datetime string
+    endTime: string;
+    timeZone: string;
+    venue?: string;
+    address: {addressOne: string,
+        postalCode: string,
+        city: string,
+        addressTwo?: string}
+    visibility: "PUBLIC" | "INVITE_ONLY" | "URL_ONLY";
 }
