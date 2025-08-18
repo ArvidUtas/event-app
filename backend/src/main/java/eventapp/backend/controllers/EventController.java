@@ -3,7 +3,6 @@ package eventapp.backend.controllers;
 import eventapp.backend.dtos.EventDTO;
 import eventapp.backend.dtos.EventSearchDTO;
 import eventapp.backend.services.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import java.util.List;
 
 @RestController
 public class EventController {
-    @Autowired
-    private EventService service;
+    private final EventService service;
+
+    public EventController(EventService service){
+        this.service = service;
+    }
 
     @PostMapping("/addEvent")
     public ResponseEntity<String> addEvent(@RequestBody EventDTO event){
