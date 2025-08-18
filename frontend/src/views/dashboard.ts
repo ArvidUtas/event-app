@@ -9,9 +9,9 @@ export function showDashboard(): string {
         <input type="text" class="form-control w-25 mt-2" name="organisedBy" placeholder="Organised by:">
         <input type="text" class="form-control w-25 mt-2" name="venue" placeholder="Venue:">
         <input type="text" class="form-control w-25 mt-2" name="city" placeholder="City:">
-        <label for="start-time" class="form-label mt-2">Start time:</label>
+        <label for="start-time" class="form-label mt-2" id="start-time">Start time:</label>
         <input type="datetime-local" class="form-control w-25" name="startTime"/>
-        <label for="end-time" class="form-label mt-2">End time:</label>
+        <label for="end-time" class="form-label mt-2" id="end-time">End time:</label>
         <input type="datetime-local" class="form-control w-25" name="endTime"/>
         <br>
         <button type="submit" class="btn btn-success border">Search</button>
