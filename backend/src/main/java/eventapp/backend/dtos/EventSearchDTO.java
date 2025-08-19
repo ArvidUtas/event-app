@@ -7,9 +7,8 @@ import java.time.ZoneId;
 public class EventSearchDTO {
     private final String keyword;
     private final String organisedBy;
-    private final ZoneId timeZone;
-    private final Instant startTime;
-    private final Instant endTime;
+    private Instant startTime;
+    private Instant endTime;
     private final String venue;
     private final String city;
 
@@ -17,11 +16,10 @@ public class EventSearchDTO {
                           LocalDateTime endTime, ZoneId timeZone, String venue, String city) {
         this.keyword = keyword;
         this.organisedBy = organisedBy;
-        this.timeZone = timeZone;
-        this.startTime = startTime.atZone(timeZone).toInstant();
-        this.endTime = endTime.atZone(timeZone).toInstant();
         this.venue = venue;
         this.city = city;
+        if (startTime != null) this.startTime = startTime.atZone(timeZone).toInstant();
+        if (endTime != null) this.endTime = endTime.atZone(timeZone).toInstant();
     }
 
     public String getKeyword() {
