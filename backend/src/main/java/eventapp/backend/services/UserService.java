@@ -5,18 +5,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import eventapp.backend.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository repo;
+    private final UserRepository repo;
 
-    public AppUser findUserByUsername(String username){
-        return repo.findByUsername(username).orElseGet(null);
+    public UserService(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    public Optional<AppUser> findUserByUsername(String username){
+        return repo.findByUsername(username);
     }
 
     public ResponseEntity<String> registerUser(String username, String email, String password){

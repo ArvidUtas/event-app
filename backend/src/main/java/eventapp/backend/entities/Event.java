@@ -12,7 +12,7 @@ public class Event {
     @Id
     private String id;
     private final String title;
-    private final String organisedBy; //FK
+    private final String organisedBy;
     private final String description;
     //private String image;
     private final Instant startTime;
@@ -50,5 +50,45 @@ public class Event {
                 ", address=" + address +
                 ", visibility=" + visibility +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getOrganisedBy() {
+        return organisedBy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public Instant getEndTime() {
+        return endTime;
+    }
+
+    public ZoneId getTimeZone() {
+        return timeZone;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
     }
 }

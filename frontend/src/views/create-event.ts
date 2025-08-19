@@ -45,7 +45,7 @@ function postNewEvent(e:Event){
     
     const eventData: EventFormData = {
         title: formData.get("title") as string,
-        organisedBy: sessionStorage.getItem("token"),
+        organisedBy: sessionStorage.getItem("token"), //Need to be replaced with JWT or ss sesion
         description: formData.get("description") as string,
         startTime: formData.get("start-time") as string,
         endTime: formData.get("end-time") as string,

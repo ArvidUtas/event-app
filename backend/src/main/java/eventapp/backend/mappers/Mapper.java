@@ -9,4 +9,9 @@ public class Mapper {
         return new Event(dto.getTitle(),dto.getOrganisedBy(), dto.getDescription(), dto.getStartTime(),dto.getEndTime(),
                 dto.getTimeZone(), dto.getVenue(), dto.getAddress(),dto.getVisibility());
     }
+
+    public EventDTO eventToEventDto(Event event){
+        return new EventDTO(event.getId(), event.getTitle(), event.getOrganisedBy(), event.getDescription(), event.getStartTime(), event.getEndTime(),
+                event.getTimeZone(), event.getVenue(), event.getAddress(),event.getVisibility());
+    }
 }
