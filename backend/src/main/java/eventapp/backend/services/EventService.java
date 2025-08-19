@@ -2,7 +2,6 @@ package eventapp.backend.services;
 
 import eventapp.backend.dtos.EventDTO;
 import eventapp.backend.dtos.EventSearchDTO;
-import eventapp.backend.entities.AppUser;
 import eventapp.backend.entities.Event;
 import eventapp.backend.mappers.Mapper;
 import eventapp.backend.repositories.EventRepository;
@@ -14,25 +13,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
 public class EventService {
     private final EventRepository repo;
-    private final UserService userService;
     private final Mapper mapper = new Mapper();
     private final MongoTemplate mongoTemplate;
 
-    public EventService(EventRepository repo, UserService userService, MongoTemplate mongoTemplate) {
+    public EventService(EventRepository repo, MongoTemplate mongoTemplate) {
         this.repo = repo;
-        this.userService = userService;
         this.mongoTemplate = mongoTemplate;
     }
 
     public ResponseEntity<String> addEvent(EventDTO event){
         try {
-            event.setOrganisedBy(userService.findUserByUsername(event.getOrganisedBy()).get().getId());
             repo.save(mapper.eventDtoToEvent(event));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add event. " + e.getMessage());
@@ -56,8 +51,7 @@ public class EventService {
                     Pattern.quote(searchDTO.getKeyword()) + ".*", "i"));
         }
         if (searchDTO.getOrganisedBy() != null){
-            Optional<AppUser> userOpt = userService.findUserByUsername(searchDTO.getOrganisedBy());
-            userOpt.ifPresent(user -> query.addCriteria(Criteria.where("organisedBy").is(user.getId())));
+            query.addCriteria(Criteria.where("organisedBy").is(searchDTO.getOrganisedBy()));
         }
         if (searchDTO.getCity() != null){
             query.addCriteria(Criteria.where("address.city").regex("^" +
